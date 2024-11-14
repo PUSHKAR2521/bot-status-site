@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Status</title>
 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+        }
+        body{
+            background: #071023;
+            box-sizing: border-box;
+            /* min-height: 100vh; */
+            /* width: 97.9vw; */
+            color: white;
+        }
+
+        .topContainer{
+            /* width: 100%; */
+            /* background: red; */
+            height: 125px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8rem;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .topContainer>span:nth-child(2){
+            font-size: 1.4rem;
+        }
+        
+        .statuscontainer{
+            height: 125px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8rem;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 30px 0;
+        }
+
+        .container, .container2{
+            background: #051F5E;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            /* align-items: center; */
+            justify-content: center;
+            padding: 0 30px;
+            font-weight: 700;
+            flex-direction: column;
+        }
+
+        .container2{
+            height: 150px;
+            gap: 20px;
+        }
+
+        @media only screen and (max-width: 768px){
+            .topContainer{
+                padding: 0 2rem;
+            }
+            .statuscontainer{
+                padding: 0 2rem;
+            }
+        }
+
+        
+
+        @media only screen and (max-width: 528px){
+            .topContainer{
+                padding: 0 1rem;
+                font-size: 1.2rem;
+                font-weight: 700;
+            }
+            .statuscontainer{
+                padding: 0 1rem;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topContainer">
+        <span>B A C - Status</span>
+        <span>Service Status</span>
+    </div>
+    <div class="statuscontainer">
+        <div class="container">
+            <p><%= botStatus.status %></p>
+        </div>
+    </div>
+    <div class="statuscontainer">
+        <div class="container">
+            <p>👀 <%= botStatus.uptime %></p>
+        </div>
+    </div>
+    <!-- <div class="botUptime">
+        <p>Uptime: <%= botStatus.uptime %></p>
+    </div> -->
+    <div class="serverStat">
+        <div class="topContainer">
+            <span>Server Stats</span>
+        </div>
+        <div class="statuscontainer">
+            <div class="container2">
+                <p>CPU Usage : <span><%= botStatus.cpuUsage %>%</span></p>
+                <p>Memory Usage : <span><%= botStatus.cpuUsage %>MB</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
