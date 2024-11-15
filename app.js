@@ -47,6 +47,9 @@ passport.use(new DiscordStrategy({
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
+console.log(process.env);
+
+
 // Middleware to check if user is admin
 function adminOnly(req, res, next) {
     const adminIds = process.env.ADMIN_IDS.split(',');
