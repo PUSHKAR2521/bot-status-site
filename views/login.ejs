@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>B A C - Login</title>
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            color: white;
+        }
+
+        body {
+            background: #071023;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        a {
+            display: flex;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all .3s ease;
+            color: white;
+        }
+
+        a:hover{
+            color: gold;
+        }
+
+        h1{
+            font-size: 4rem;
+        }
+
+        h1::selection, a::selection{
+            color: red;
+        }
+
+        .container{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <a href="/auth/discord">Login with Discord</a>
+    </div>
+</body>
+
+</html>

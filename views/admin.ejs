@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B A C - Admin</title>
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #071023;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .headText {
+            color: gold;
+        }
+
+        label{
+            font-size: 1.4rem;
+        }
+
+        .formContainer {
+            display: flex;
+            /* align-items: center; */
+            justify-content: center;
+            flex-direction: column;
+            /* width: 200px; */
+            /* background: red; */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            /* gap: 100px; */
+        }
+
+        .subContainer {
+            display: flex;
+            flex-direction: column;
+            /* background: red; */
+            width: 80vw;
+            height: 80vh;
+            align-items: center;
+            position: relative;
+        }
+
+        #endTime{
+            margin-top: 10px;
+            background: transparent;
+            color: white;
+            font-size: 1.2rem;
+            border: 2px solid gold;
+            padding: 4px;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        #endTime:focus{
+            transition: all .3s ease;
+            border-radius: 10px;
+        }
+
+        #endBtn{
+            background: transparent;
+            margin: 10px 0 20px 0;
+            background: transparent;
+            color: white;
+            font-size: 1.1rem;
+            border: 2px solid rgb(0, 255, 0);
+            padding: 4px;
+            outline: none;
+            transition: all .3s ease;
+            border-radius: 0px;
+        }
+
+        #endBtn:hover{
+            background: rgb(0, 255, 0);
+            border-radius: 10px;
+            color: #071023;
+        }
+
+        #stats{
+            font-size: 1.4rem;
+            /* margin: 10px; */
+        }
+
+        #toggleBtn{
+            margin-top: 10px;
+            background: transparent;
+            /* margin: 10px 0 20px 0; */
+            background: transparent;
+            color: white;
+            font-size: 1.1rem;
+            border: 2px solid red;
+            padding: 4px;
+            outline: none;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s ease;
+            border-radius: 0px;
+        }
+
+        #toggleBtn:hover{
+            background: red;
+            border-radius: 10px;
+        }
+
+        #highlight{
+            color: gold;
+        }
+
+        span{
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="subContainer">
+            <div class="headText">
+                <h1>Admin Panel</h1>
+            </div>
+
+            <form id="maintenanceForm" class="formContainer">
+                <label for="endTime">Set Maintenance End Time:</label>
+                <input type="datetime-local" id="endTime" name="endTime" required>
+                <button type="submit" id="endBtn">Set End Time</button>
+
+                <!-- <div class="maintenance-stats">
+                    <span id="stats">Maintenance Mode is </span>
+                </div> -->
+
+                <button onclick="toggleMaintenance()" id="toggleBtn">Maintenance Mode is<div id="highlight">Off</div></button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function toggleMaintenance() {
+            const response = await fetch('/admin/toggle-maintenance', { method: 'POST' });
+            const data = await response.json();
+
+            const statistics = document.getElementById('highlight');
+
+            statistics.textContent = `${data.maintenanceMode ? 'On' : 'Off'}`;
+            alert(`Maintenance mode is now ${data.maintenanceMode ? 'ON' : 'OFF'}`);
+        }
+
+        document.getElementById('maintenanceForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const endTime = document.getElementById('endTime').value;
+            await fetch('/admin/set-maintenance-end', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ endTime }),
+            });
+            alert('Maintenance end time set.');
+        });
+
+        function maintenanceStats() {
+        }
+
+        maintenanceStats()
+    </script>
+</body>
+
+</html>
