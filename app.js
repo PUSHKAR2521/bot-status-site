@@ -3,6 +3,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 require('dotenv').config();
@@ -23,11 +24,15 @@ let maintenanceMode = false;
 let maintenanceEndTime = null;
 let statusTimeout;
 
-// Set up session middleware
+// Set up session middleware with connect-mongo
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI, // Replace with your MongoDB URI
+        collectionName: 'sessions',
+    }),
 }));
 
 // Initialize Passport and use session with it
@@ -46,6 +51,8 @@ passport.use(new DiscordStrategy({
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
+
+// console.log(process.env);
 
 // Middleware to check if user is admin
 function adminOnly(req, res, next) {
