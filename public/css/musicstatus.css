@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
+* {
+  font-family: "Righteous", serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root{
+    --green: #3BD671;
+    --red: #D63B3B;
+    --bg: #262626;
+    --second-bg: #363636;
+    --third-bg: #888888;
+    --text-color: #AEAEAE;
+    --white: #fff;
+}
+
+html, body{
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+}
+
+section{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 100px;
+    height: calc(100vh - 80px);
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 25px 0;
+    gap: 15px;
+}
+
+.CurrentlyPlaying{
+    font-size: 22px;
+    color: var(--green);
+}
+
+.container .imageContainer{
+    width: 500px;   
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Ensure no extra content shows */
+    border-radius: 20px;
+}
+
+.container .imageContainer #songCoverPic1{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.MusicControls{
+    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.PlaybackControls{
+    width: 500px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+}
+
+.PlaybackControls .playBtn{
+    padding: 20px;
+    background: var(--second-bg);
+    border-radius: 50%;
+}
+
+.PlaybackControls span{
+    color: var(--red);
+}
+
+.PlaybackControls span:nth-child(1){
+    color: var(--second-bg);
+}
+
+.MusicControls .seekBarContainer{
+    width: 500px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.MusicControls .seekBarContainer .seekBar{
+    width: 450px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.seekBar .circle{
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background: var(--third-bg);
+    position: absolute;
+    z-index: 1;
+    /* left: 430px; */
+}
+
+.seekBar .bar{
+    width: 450px;
+    height: 5px;
+    background: var(--second-bg);
+    position: absolute;
+}
+
+.infoContainer{
+    display: block;
+    color: var(--green);
+    font-size: 18px;
+}
+
+.Secondcontainer{
+    width: 800px;
+    height: 100%;
+    padding: 25px 0;
+}
+
+.Secondcontainer .CurrentlyPlaying{
+    color: var(--red);
+}
+
+.MainSongContainer{
+    margin: 20px 0;
+}
+
+.queueInfoContainer{
+    width: 780px;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px 10px 10px;
+    color: var(--white);
+    border-bottom: 2px solid var(--text-color);
+}

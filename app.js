@@ -11,80 +11,80 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 5555;
 
-let botStatus = {
-    status: 'Offline',
-    uptime: 'N/A',
-    cpuUsage: 'N/A',
-    memoryUsage: 'N/A',
-};
+// let botStatus = {
+//     status: 'Offline',
+//     uptime: 'N/A',
+//     cpuUsage: 'N/A',
+//     memoryUsage: 'N/A',
+// };
 
-let maintenanceMode = false;
-let maintenanceEndTime = null;
-let statusTimeout;
+// let maintenanceMode = false;
+// let maintenanceEndTime = null;
+// let statusTimeout;
 
-// Set up session middleware with connect-mongo
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI, // Replace with your MongoDB URI
-        collectionName: 'sessions',
-    }),
-}));
+// // Set up session middleware with connect-mongo
+// app.use(session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: MongoStore.create({
+//         mongoUrl: process.env.MONGO_URI, // Replace with your MongoDB URI
+//         collectionName: 'sessions',
+//     }),
+// }));
 
-// Initialize Passport and use session with it
-app.use(passport.initialize());
-app.use(passport.session());
+// // Initialize Passport and use session with it
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-// Configure Passport with Discord Strategy
-passport.use(new DiscordStrategy({
-    clientID: process.env.DISCORD_CLIENT_ID,
-    clientSecret: process.env.DISCORD_CLIENT_SECRET,
-    callbackURL: process.env.DISCORD_CALLBACK_URL,
-    scope: ['identify'],
-}, (accessToken, refreshToken, profile, done) => {
-    return done(null, profile);
-}));
+// // Configure Passport with Discord Strategy
+// passport.use(new DiscordStrategy({
+//     clientID: process.env.DISCORD_CLIENT_ID,
+//     clientSecret: process.env.DISCORD_CLIENT_SECRET,
+//     callbackURL: process.env.DISCORD_CALLBACK_URL,
+//     scope: ['identify'],
+// }, (accessToken, refreshToken, profile, done) => {
+//     return done(null, profile);
+// }));
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+// passport.serializeUser((user, done) => done(null, user));
+// passport.deserializeUser((obj, done) => done(null, obj));
 
 // console.log(process.env);
 
-// Middleware to check if user is admin
-function adminOnly(req, res, next) {
-    const adminIds = process.env.ADMIN_IDS.split(',');
-    if (req.isAuthenticated() && adminIds.includes(req.user.id)) {
-        return next();
-    }
-    res.redirect('/login');
-}
+// // Middleware to check if user is admin
+// function adminOnly(req, res, next) {
+//     const adminIds = process.env.ADMIN_IDS.split(',');
+//     if (req.isAuthenticated() && adminIds.includes(req.user.id)) {
+//         return next();
+//     }
+//     res.redirect('/login');
+// }
 
-// Socket.io connection and bot status logic
-io.on('connection', (socket) => {
-    console.log('Dashboard client connected');
+// // Socket.io connection and bot status logic
+// io.on('connection', (socket) => {
+//     console.log('Dashboard client connected');
 
-    // Send initial bot status and maintenance settings to newly connected clients
-    socket.emit('statusUpdate', botStatus);
-    socket.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
+//     // Send initial bot status and maintenance settings to newly connected clients
+//     socket.emit('statusUpdate', botStatus);
+//     socket.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
 
-    socket.on('statusUpdate', (data) => {
-        botStatus = data;
-        botStatus.status = '🟢 All Systems operational';
+//     socket.on('statusUpdate', (data) => {
+//         botStatus = data;
+//         botStatus.status = '🟢 All Systems operational';
 
-        clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(() => {
-            botStatus.status = '🔴 System having issue';
-            botStatus.uptime = 'N/A';
-            botStatus.cpuUsage = 'N/A';
-            botStatus.memoryUsage = 'N/A';
-            io.emit('statusUpdate', botStatus);
-        }, 300000); // 5 minutes in milliseconds
-    });
-});
+//         clearTimeout(statusTimeout);
+//         statusTimeout = setTimeout(() => {
+//             botStatus.status = '🔴 System having issue';
+//             botStatus.uptime = 'N/A';
+//             botStatus.cpuUsage = 'N/A';
+//             botStatus.memoryUsage = 'N/A';
+//             io.emit('statusUpdate', botStatus);
+//         }, 300000); // 5 minutes in milliseconds
+//     });
+// });
 
 // Set up view engine
 app.set('view engine', 'ejs');
@@ -93,46 +93,50 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.get('/', (req, res) => {
-    res.render('status', { botStatus, maintenanceMode, maintenanceEndTime });
+    res.render('status', {  });
 });
 
-app.get('/login', (req, res) => {
-    res.render('login');
+app.get('/musicDash', (req, res) => {
+    res.render('musicStatus',{  });
 });
 
-app.get('/auth/discord', passport.authenticate('discord'));
-app.get('/auth/discord/callback', passport.authenticate('discord', {
-    failureRedirect: '/login'
-}), (req, res) => {
-    res.redirect('/admin');
-});
+// app.get('/login', (req, res) => {
+//     res.render('login');
+// });
 
-app.get('/logout', (req, res) => {
-    req.logout(() => {
-        res.redirect('/');
-    });
-});
+// app.get('/auth/discord', passport.authenticate('discord'));
+// app.get('/auth/discord/callback', passport.authenticate('discord', {
+//     failureRedirect: '/login'
+// }), (req, res) => {
+//     res.redirect('/admin');
+// });
 
-// Admin page for toggling maintenance mode
-app.get('/admin', adminOnly, (req, res) => {
-    res.render('admin', { maintenanceMode, maintenanceEndTime });
-});
+// app.get('/logout', (req, res) => {
+//     req.logout(() => {
+//         res.redirect('/');
+//     });
+// });
 
-// Set maintenance end time
-app.post('/admin/set-maintenance-end', adminOnly, (req, res) => {
-    const { endTime } = req.body;
-    maintenanceEndTime = new Date(endTime);
-    maintenanceMode = true;
-    io.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
-    res.json({ success: true });
-});
+// // Admin page for toggling maintenance mode
+// app.get('/admin', adminOnly, (req, res) => {
+//     res.render('admin', { maintenanceMode, maintenanceEndTime });
+// });
 
-app.post('/admin/toggle-maintenance', adminOnly, (req, res) => {
-    maintenanceMode = !maintenanceMode;
-    if (!maintenanceMode) maintenanceEndTime = null;
-    io.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
-    res.json({ maintenanceMode });
-});
+// // Set maintenance end time
+// app.post('/admin/set-maintenance-end', adminOnly, (req, res) => {
+//     const { endTime } = req.body;
+//     maintenanceEndTime = new Date(endTime);
+//     maintenanceMode = true;
+//     io.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
+//     res.json({ success: true });
+// });
+
+// app.post('/admin/toggle-maintenance', adminOnly, (req, res) => {
+//     maintenanceMode = !maintenanceMode;
+//     if (!maintenanceMode) maintenanceEndTime = null;
+//     io.emit('maintenanceUpdate', { maintenanceMode, maintenanceEndTime });
+//     res.json({ maintenanceMode });
+// });
 
 // Start server
 server.listen(PORT, () => {

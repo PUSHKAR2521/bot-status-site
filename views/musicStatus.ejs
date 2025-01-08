@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%-include('./includes/head.ejs')%>
+    <link rel="stylesheet" href="css/musicstatus.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"
+    />
+    <!-- <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Revalia&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #071023;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        
+        section{
+            width: 100vw;
+            min-height: calc(100vh - 120px);
+            /* background: red; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container{
+            display: flex;
+            /* flex-direction: column; */
+            gap: 40px;
+            width: 60vw;
+            align-items: center;
+            /* background: red; */
+        }
+
+        #songCoverPic{
+            width: 500px;
+            height: 500px;
+            object-fit: cover;
+            border: 2px solid goldenrod;
+            border-radius: 15px;
+        }
+
+        #iframesongCoverPic{
+            /* width: 500px;
+            height: 500px; */
+            width: 600px;
+            aspect-ratio: 16 / 9;
+            /* object-fit: cover; */
+            border: 2px solid goldenrod;
+        }
+
+        .goldenrodColor{
+            color: goldenrod;
+        }
+
+        p, span{
+            text-transform: capitalize;
+            font-size: 1.2rem;
+        }
+
+        .statuscontainer{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2rem;
+            height: 500px;
+        }
+
+        #TimerContainer{
+            opacity: 0;
+            /* display: none; */
+        }
+
+        #ErrorCode{
+            font-family: "Outfit", serif;
+        }
+    </style> -->
+  </head>
+  <body>
+    <main>
+      <%-include('./includes/header.ejs')%>
+
+      <section>
+        <!-- <p id="TimerContainer">Next refresh in: <span id="timer">1</span> seconds</p> -->
+        <div class="container">
+          <div class="CurrentlyPlaying">Currently Playing</div>
+          <div class="imageContainer">
+            <img
+              src=""
+              id="songCoverPic1"
+              style="scale: 1.4"
+              alt="Nothing is playing"
+            />
+          </div>
+          <div class="MusicControls">
+            <div class="PlaybackControls">
+              <span class="previous material-symbols-outlined"
+                >fast_rewind</span
+              >
+              <span class="playBtn material-symbols-outlined">play_arrow</span>
+              <span class="forward material-symbols-outlined"
+                >fast_forward</span
+              >
+              <span class="fullscreen material-symbols-outlined"
+                >crop_free</span
+              >
+            </div>
+            <div class="seekBarContainer">
+              <div class="seekBar">
+                <div class="circle"></div>
+                <div class="bar"></div>
+              </div>
+            </div>
+          </div>
+          <div class="infoContainer">
+            <p>
+              <a id="SongName" target="_blank"
+                ><span id="SongName">Nothing is Playing 😇</span></a
+              >
+            </p>
+            <!-- <p>Source: <span class="goldenrodColor" id="Musicsource"></span></p> -->
+            <p><span class="goldenrodColor" id="AuthorofMusic"></span></p>
+            <!-- <p>Requester: <span class="goldenrodColor" id="RequesterofMusic"></span></p> -->
+            <!-- <p>Duration: <span class="goldenrodColor" id="MusicDuration"></span></p> -->
+            <!-- <p>Paused: <span class="goldenrodColor" id="musicpaused"></span></p> -->
+            <!-- <p>Time: <span class="goldenrodColor" id="MusicSeek"></span></p> -->
+          </div>
+        </div>
+        <div class="Secondcontainer">
+          <div class="CurrentlyPlaying">In Queue</div>
+          <div class="MainSongContainer">
+            <div class="queueInfoContainer">
+                <p>1. 
+                  <a id="QueueTitleLink" target="_blank"
+                    ><span id="QueueTitle">Nothing is Playing 😇</span></a
+                  >
+                <p><span class="goldenrodColor" id="QueuememoryUsage">Requester
+                </p>
+                <p> <span class="goldenrodColor" id="QueueSeek">02:30</p>
+              </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      let currentSongUri = ""; // To track the current song and avoid redundant iframe updates
+
+      async function fetchStatus() {
+        try {
+          const response = await fetch(
+            "https://music.officialbac.xyz/api/player/805007754795155456"
+          );
+          const song = await response.json();
+
+          // // Check if the song has changed
+          // if (song.current.uri !== currentSongUri) {
+          //     currentSongUri = song.current.uri;
+
+          //     // Convert YouTube video URL to embed URL
+          //     let embedUrl = song.current.uri;
+          //     if (song.current.uri.includes('youtube.com/watch?v=')) {
+          //         const videoId = song.current.uri.split('v=')[1].split('&')[0];
+          //         embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          //     }
+
+          //     // Update iframe only when the song changes
+          //     document.getElementById('iframesongCoverPic').setAttribute('src', embedUrl);
+          //     document.getElementById('Musicuptime').setAttribute('href', song.current.uri);
+          // }
+
+          // Update other details
+          document
+            .getElementById("songCoverPic1")
+            .setAttribute("alt", song.current.title);
+          document
+            .getElementById("songCoverPic1")
+            .setAttribute("src", song.current.thumbnail);
+          document.getElementById("SongName").textContent = song.current.title;
+          document.getElementById("AuthorofMusic").textContent =
+            song.current.author;
+          document.getElementById("Musicsource").textContent =
+            song.current.source;
+          document.getElementById("RequesterofMusic").textContent =
+            song.current.requester;
+          document.getElementById("musicpaused").textContent = song.paused;
+
+          const Musichours = Math.floor(
+            (song.current.duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const Musicminutes = Math.floor(
+            (song.current.duration % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const Musicseconds = Math.floor(
+            (song.current.duration % (1000 * 60)) / 1000
+          );
+          document.getElementById(
+            "MusicDuration"
+          ).textContent = `${Musichours}h ${Musicminutes}m ${Musicseconds}s`;
+          console.log(`${Musichours}h ${Musicminutes}m ${Musicseconds}s`);
+// Song queue
+const queueContainer = document.getElementById("QueueContainer");
+        queueContainer.innerHTML = ""; // Clear previous queue items
+
+        if (song.songqueue && song.songqueue.length > 0) {
+            song.songqueue.forEach((song, index) => {
+                const { title, duration, requester, author } = song;
+
+                const songElement = document.createElement("div");
+                songElement.classList.add("queue-item");
+
+                const hours = Math.floor(duration / (1000 * 60 * 60));
+                const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((duration % (1000 * 60)) / 1000);
+
+                songElement.innerHTML = `
+                    <p><strong>${index + 1}. ${title}</strong></p>
+                    <p>Author: ${author}</p>
+                    <p>Duration: ${hours}h ${minutes}m ${seconds}s</p>
+                    <p>Requester: ${requester}</p>
+                `;
+
+                queueContainer.appendChild(songElement);
+            });
+        } else {
+            queueContainer.innerHTML = "<p>No songs in the queue 😇</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching status:", error);
+    }
+}
+
+      function startTimer() {
+        let countdown = 1;
+        const timerElement = document.getElementById("timer");
+
+        setInterval(() => {
+          timerElement.textContent = countdown;
+          countdown--;
+
+          if (countdown < 0) {
+            fetchStatus(); // Fetch status details
+            countdown = 1;
+          }
+        }, 1000);
+      }
+
+      function startCountdown(endDate) {
+        const countdownElement = document.getElementById("countdown");
+
+        const interval = setInterval(() => {
+          const now = new Date().getTime();
+          const distance = endDate - now;
+
+          if (distance <= 0) {
+            clearInterval(interval);
+            countdownElement.textContent = "Maintenance has ended.";
+            fetchStatus(); // Refresh the status immediately when maintenance ends
+            return;
+          }
+
+          const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          countdownElement.textContent = `Maintenance ends in: ${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+      }
+
+      fetchStatus();
+      startTimer();
+    </script>
+  </body>
+</html>

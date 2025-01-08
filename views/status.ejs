@@ -111,22 +111,7 @@
 </head>
 <body>
     <main>
-        <div class="topContainer">
-            <span>B A C - Status <br> <a class="headLink" href="https://officialbac.xyz/">Main-Site</a></span>
-            <div class="timercontainer">
-                <span>Service Status</span>
-                <p>Next refresh in: <span id="timer">15</span> seconds</p>
-            </div>
-        </div>
-    
-        <% if (maintenanceMode) { %>
-            <div class="statuscontainer">
-                <div class="container">
-                    <h2>Maintenance Mode Active</h2>
-                    <p id="countdown">Maintenance ends in: Loading...</p>
-                </div>
-            </div>
-        <% } else { %>
+        <%-include('./includes/header.ejs')%>
             <div class="statuscontainer">
                 <div class="container">
                     <p><span id="status">Loading...</span></p>
@@ -148,11 +133,6 @@
                     </div>
                 </div>
             </div>
-        <% } %>
-    
-        <div class="bottom">
-            <a href="/login">Login</a> | <a href="/logout">Logout</a>
-        </div>
     </main>
 
     <script>
@@ -191,27 +171,27 @@
             }, 1000);
         }
 
-        function startCountdown(endDate) {
-            const countdownElement = document.getElementById('countdown');
+        // function startCountdown(endDate) {
+        //     const countdownElement = document.getElementById('countdown');
 
-            const interval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = endDate - now;
+        //     const interval = setInterval(() => {
+        //         const now = new Date().getTime();
+        //         const distance = endDate - now;
 
-                if (distance <= 0) {
-                    clearInterval(interval);
-                    countdownElement.textContent = "Maintenance has ended.";
-                    fetchStatus(); // Refresh the status immediately when maintenance ends
-                    return;
-                }
+                // if (distance <= 0) {
+                //     clearInterval(interval);
+                //     countdownElement.textContent = "Maintenance has ended.";
+                //     fetchStatus(); // Refresh the status immediately when maintenance ends
+                //     return;
+                // }
 
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                // const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                // const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                // const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                countdownElement.textContent = `Maintenance ends in: ${hours}h ${minutes}m ${seconds}s`;
-            }, 1000);
-        }
+                // countdownElement.textContent = `Maintenance ends in: ${hours}h ${minutes}m ${seconds}s`;
+        //     }, 1000);
+        // }
 
         fetchStatus();
         startTimer();
