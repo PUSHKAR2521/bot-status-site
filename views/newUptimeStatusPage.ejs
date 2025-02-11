@@ -1,0 +1,169 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Status Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    .status-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .status-card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .status-card h2 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .status.up {
+      color: #fff;
+      background-color: #28a745;
+    }
+    .status.down {
+      color: #fff;
+      background-color: #dc3545;
+    }
+    .details {
+      margin-top: 15px;
+    }
+    .detail-item {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="status-container">
+    <h1>Service Status</h1>
+    <a href="/up">UP status</a>
+    <a href="/down">DOWN Status</a>
+    <% if (monitors.length > 0) { %>
+      <% monitors.forEach(monitor => { %>
+        <div class="status-card">
+          <h2><%= monitor.friendly_name %></h2>
+          <div class="status <%= monitor.status === 2 ? 'up' : 'down' %>">
+            <%= monitor.status === 2 ? 'Up' : 'Down' %>
+          </div>
+          <div class="details">
+            <div class="detail-item">Uptime: <%= monitor.all_time_uptime_ratio %>%</div>
+            <div class="detail-item">Average Response Time: <%= monitor.average_response_time %> ms</div>
+            <div class="detail-item">
+              Last Downtime: 
+              <%= monitor.logs && monitor.logs.length > 0 ? new Date(monitor.logs[0].datetime * 1000).toLocaleString() : 'N/A' %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No services available or unable to fetch status.</p>
+    <% } %>
+  </div>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%-include('./includes/head.ejs')%>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <!-- Theme Toggle Script -->
+  <script>
+    function toggleTheme() {
+      const currentTheme = localStorage.getItem('theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', newTheme);
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+    window.onload = function () {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+  </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white font-sans antialiased">
+  <!-- Theme Toggle Button -->
+  <button onclick="toggleTheme()" class="fixed top-6 right-6 p-3 bg-gray-200 dark:bg-gray-700 rounded-full shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+    <span class="material-icons">brightness_6</span>
+  </button>
+
+  <div class="max-w-7xl mx-auto p-6">
+    <!-- Header Section -->
+    <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+      <div class="flex items-center space-x-4 mb-4 md:mb-0">
+        <div class="text-4xl text-green-500">✔️</div>
+        <div>
+          <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">All Systems Operational</h1>
+          <p class="text-xl text-green-400">
+            Services Running: <span id="serviceCount"><%= monitors.length %></span>
+          </p>
+        </div>
+      </div>
+      <!-- Navigation Links -->
+      <nav class="flex space-x-4">
+        <a href="/up" class="px-6 py-3 text-lg text-white bg-green-600 hover:bg-green-500 rounded-xl shadow-lg transition">UP Status</a>
+        <a href="/down" class="px-6 py-3 text-lg text-white bg-red-600 hover:bg-red-500 rounded-xl shadow-lg transition">DOWN Status</a>
+      </nav>
+    </header>
+
+    <!-- Responsive Grid for Service Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <% if (monitors.length > 0) { %>
+        <% monitors.forEach(monitor => { %>
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition duration-300 ease-in-out hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-2xl font-semibold text-gray-800 dark:text-white"><%= monitor.friendly_name %></h2>
+              <div class="px-4 py-2 rounded-full text-white <%= monitor.status === 2 ? 'bg-green-600' : 'bg-red-600' %>">
+                <%= monitor.status === 2 ? 'Up' : 'Down' %>
+              </div>
+            </div>
+            <div class="space-y-3 text-gray-700 dark:text-gray-300">
+              <div class="flex justify-between">
+                <span>Uptime:</span>
+                <span><%= monitor.all_time_uptime_ratio %>%</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Avg. Response Time:</span>
+                <span><%= monitor.average_response_time %> ms</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Last Downtime:</span>
+                <span>
+                  <%= monitor.logs && monitor.logs.length > 0 ? new Date(monitor.logs[0].datetime * 1000).toLocaleString() : 'N/A' %>
+                </span>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="col-span-full text-center text-lg text-gray-400">No services available or unable to fetch status.</p>
+      <% } %>
+    </section>
+  </div>
+</body>
+</html>
